@@ -1,0 +1,1 @@
+add_subdirectory(calculate_md5)
