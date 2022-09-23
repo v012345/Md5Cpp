@@ -1,35 +1,34 @@
-#include <windows.h>
 #include "md5file.h"
 #include <iostream>
-#include <winbase.h>
+#include <filesystem>
+#include <map>
+#include <string>
+#include <fstream>
 
-using namespace std;
-
-#define PATH "D:\\Desktop\\Monitor_TangWeiKang\\UpgradedMonitoringMachine_TangWeiKang\\RecordingSeparation\\code\\VS2019\\DownloadWget\\record.txt"
-
-int main(void)
+int main(int argc, char const *argv[])
 {
-
-    // while (1)
-    // {
-
-    //     //获取文件的MD5值
-    //     // twk测试
-    //     // std::cout << getFileMD5(PATH) << std::endl;
-
-    //     string FileMD5 = getFileMD5(PATH);
-    //     Sleep(1000);
-    //     if (FileMD5.compare(getFileMD5(PATH)) == 0)
-    //     {
-
-    //         cout << "文件没有被修改过" << endl;
-    //     }
-    //     else
-    //     {
-
-    //         cout << "文件被修改过l" << endl;
-    //     }
-    // }
+    std::map<std::string, std::string> simpleJson;
+    // std::cout << getFileMD5(.append("action_attack.xls").string()) << std::endl;
+    for (auto &&xls : std::filesystem::directory_iterator(std::filesystem::current_path().parent_path()))
+    {
+        if (xls.path().extension() == ".xls")
+        {
+            std::cout << xls.path().stem().string() << std::endl;
+            // std::cout << getFileMD5(xls.path().string()) << std::endl;
+            simpleJson.insert(std::make_pair(xls.path().stem().string(), getFileMD5(xls.path().string())));
+        }
+    }
+    std::ofstream json("hash_md5_map.json");
+    json << "{" << std::endl;
+    auto last = simpleJson.rbegin();
+    std::string last_name = (*last).first;
+    for (auto &&i : simpleJson)
+    {
+        json << "\t\"" << i.first << "\":\"" << i.second << "\"";
+        last_name != i.first &&json << ",";
+        json << std::endl;
+    }
+    json << "}" << std::endl;
 
     return 0;
 }

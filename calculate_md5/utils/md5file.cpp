@@ -64,7 +64,7 @@ std::string getFileMD5(const std::string &filename)
 
             oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<unsigned int>(digest[i]);
         }
-        oss << std::ends;
+        // oss << std::ends;
 
         return std::move(oss.str());
     }
